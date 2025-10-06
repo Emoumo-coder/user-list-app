@@ -2,6 +2,7 @@
 import { computed, onMounted, ref } from 'vue'
 import type { User, UserState } from '~/types/user'
 import UserList from '@/components/UserList.vue'
+import SearchBar from './SearchBar.vue'
 
 const users = ref<User[]>([])
 const loading = ref<boolean>(true)
@@ -39,6 +40,10 @@ const filteredUsers = computed((): User[] => {
   )
 })
 
+const updateSearchQuery = (value: string): void => {
+  searchQuery.value = value
+}
+
 onMounted(() => {
   fetchUsers()
 })
@@ -46,14 +51,7 @@ onMounted(() => {
 
 <template>
   <div class="home">
-    <div class="search-section">
-      <input
-        v-model="searchQuery"
-        type="text"
-        placeholder="Search users by name..."
-        class="search-input"
-      />
-    </div>
+    <SearchBar v-model:input-value="searchQuery" />
     
     <UserList 
       :users="filteredUsers"
@@ -74,24 +72,6 @@ onMounted(() => {
 .home {
   max-width: 1000px;
   margin: 0 auto;
-}
-
-.search-section {
-  margin-bottom: 2rem;
-}
-
-.search-input {
-  width: 100%;
-  padding: 12px 16px;
-  font-size: 1rem;
-  border: 2px solid #e1e5e9;
-  border-radius: 8px;
-  outline: none;
-  transition: border-color 0.3s ease;
-}
-
-.search-input:focus {
-  border-color: #667eea;
 }
 
 .loading, .error {
